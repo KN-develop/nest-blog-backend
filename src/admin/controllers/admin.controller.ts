@@ -1,6 +1,19 @@
-import { Controller, Header, Body, Param, Get, Post, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Header,
+  Body,
+  Param,
+  Get,
+  Post,
+  Delete,
+  HttpException,
+  HttpStatus,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 @Controller('admin')
+@UseGuards(JwtAuthGuard)
 export class AdminController {
   @Post('/configure')
   async setConfig(): Promise<boolean> {

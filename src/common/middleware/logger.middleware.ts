@@ -6,7 +6,7 @@ export class LoggerMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     console.log('Request...');
 
-    throw new HttpException({status: HttpStatus.UNAUTHORIZED, error: 'Вы не авторизованы'}, HttpStatus.FORBIDDEN);
+    //throw new HttpException({status: HttpStatus.UNAUTHORIZED, error: 'Вы не авторизованы'}, HttpStatus.FORBIDDEN);
     next();
   }
 }
