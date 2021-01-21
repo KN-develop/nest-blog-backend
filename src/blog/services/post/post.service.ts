@@ -2,8 +2,13 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BlogPost } from '../../entities/blogPost.entity';
 import { Post } from '../../interfaces/post.interface';
-import { Connection, Repository } from 'typeorm';
+import { Connection, Repository, getRepository, getConnection } from 'typeorm';
 import saveUnits from '../../../common/db/helpers/saveUnits';
+import { CreatePostDto } from '../../dto/createPost.dto';
+import { AuthService } from '../../../auth/auth.service';
+import { AuthSession } from '../../../auth/auth.session';
+import * as slug from 'slug';
+import { base64ToBlob } from '../../../common/helpers/base64ToBlob';
 
 @Injectable()
 export class PostsService {
@@ -11,23 +16,71 @@ export class PostsService {
 
   constructor(
     @InjectRepository(BlogPost)
-    private postsRepository: Repository<BlogPost>,
+    private postsRepository: Repository<any>,
     private connection: Connection,
   ) {
   }
 
-  async create(post: BlogPost): Promise<boolean> {
-    const postObject: BlogPost = this.postsRepository.create(post);
+  async create(post: CreatePostDto): Promise<boolean> {
+    const userId = AuthSession.id;
+
+    const postObject: BlogPost = this.postsRepository.create({
+      author: userId,
+      ...post,
+      slug: post.slug || Date.now(),
+      image: post.image ? base64ToBlob(post.image): null,
+    });
 
     return await saveUnits(this.connection, [postObject]);
   }
 
-  async findAll(): Promise<Post[]> {
-    return this.posts;
+  async findAll(): Promise<any[]> {
+    const res = await getRepository(BlogPost)
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.author', 'author')
+      .getMany();
+
+    const posts = res.map(post => {
+      return {
+        ...post,
+        author: post.author.firstName,
+      };
+    });
+    return posts;
   }
 
-  async findOne(): Promise<BlogPost> {
-    return void 0;
+  async delete(id: number): Promise<void> {
+    await getRepository(BlogPost)
+      .createQueryBuilder()
+      .delete()
+      .from(BlogPost)
+      .where('id = :id', { id })
+      .execute();
+  }
+
+  async update(id: number, post: CreatePostDto): Promise<boolean> {
+    const res = await getRepository(BlogPost)
+      .createQueryBuilder()
+      .update(post)
+      .set(post)
+      .where('id = :id', { id })
+      .execute();
+
+    console.log({ res });
+
+    return !!res.affected;
+  }
+
+  async findOne(slug: string): Promise<BlogPost> {
+    const res = await getRepository(BlogPost)
+      .createQueryBuilder()
+      .select()
+      .where('slug = :slug', { slug })
+      .execute();
+
+    console.log({ res });
+
+    return res;
   }
 
 }

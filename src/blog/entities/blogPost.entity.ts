@@ -16,11 +16,20 @@ export class BlogPost {
   @Column()
   description: string;
 
-  @Column()
+  @Column('longtext')
   contentHtml: string;
 
-  @Column()
+  @Column({ unique: true })
   slug: string;
+
+  @Column({ nullable: true })
+  seo_title: string;
+
+  @Column({ nullable: true })
+  seo_description: string;
+
+  @Column({ nullable: true })
+  seo_keywords: string;
 
   @ManyToOne(() => User)
   author: User;

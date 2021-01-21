@@ -8,21 +8,18 @@ interface TagInterface {
 
 export class CreatePostDto {
 
-  @IsArray()
-  categories: string[];
-
-  @IsArray()
-  tags: TagInterface[];
+  @IsString()
+  image?: string;
 
   @IsString()
-  image: string;
-
-  @IsString()
-  author: string;
+  slug?: string;
 
   @IsString()
   title: string;
 
   @IsString()
   contentHtml: string;
+
+  @IsString()
+  description: string;
 }

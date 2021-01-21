@@ -14,6 +14,7 @@ export default async (connection: Connection, units: Array<any>): Promise<boolea
 
     await queryRunner.commitTransaction();
   } catch (err) {
+    console.log({err})
     // since we have errors lets rollback the changes we made
     await queryRunner.rollbackTransaction();
     res = false;

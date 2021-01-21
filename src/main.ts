@@ -7,7 +7,7 @@ async function bootstrap() {
 
   app.use(helmet());
   app.enableCors({
-    origin: 'http://localhost',
+    origin: ['http://localhost', 'https://localhost', 'http://localhost:3000', 'https://localhost:3000'],
   });
 
   await app.listen(4000);
