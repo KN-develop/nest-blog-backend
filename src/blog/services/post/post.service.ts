@@ -65,8 +65,6 @@ export class PostsService {
       .where('id = :id', { id })
       .execute();
 
-    console.log({ res });
-
     return !!res.affected;
   }
 
@@ -76,8 +74,6 @@ export class PostsService {
       .select()
       .where('slug = :slug', { slug })
       .execute();
-
-    console.log({ res });
 
     return res;
   }
