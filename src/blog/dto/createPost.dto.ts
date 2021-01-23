@@ -22,4 +22,13 @@ export class CreatePostDto {
 
   @IsString()
   description: string;
+
+  @IsString()
+  seo_title?: string;
+
+  @IsString()
+  seo_description?: string;
+
+  @IsString()
+  seo_keywords?: string;
 }

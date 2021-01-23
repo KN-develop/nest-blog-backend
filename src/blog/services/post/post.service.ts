@@ -28,7 +28,6 @@ export class PostsService {
       author: userId,
       ...post,
       slug: post.slug || Date.now(),
-      image: post.image ? base64ToBlob(post.image): null,
     });
 
     return await saveUnits(this.connection, [postObject]);

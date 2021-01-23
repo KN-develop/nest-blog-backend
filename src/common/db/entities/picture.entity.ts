@@ -1,6 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { type } from 'os';
-import * as buffer from 'buffer';
 
 @Entity()
 export class Picture {
@@ -13,6 +11,6 @@ export class Picture {
   @Column()
   name: string;
 
-  @Column()
+  @Column('longtext')
   data: string;
 }

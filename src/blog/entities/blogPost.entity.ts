@@ -7,7 +7,7 @@ export class BlogPost {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'longtext', nullable: true })
   image: string;
 
   @Column()
@@ -30,6 +30,9 @@ export class BlogPost {
 
   @Column({ nullable: true })
   seo_keywords: string;
+
+  @Column({type: 'timestamp'})
+  date: number;
 
   @ManyToOne(() => User)
   author: User;
